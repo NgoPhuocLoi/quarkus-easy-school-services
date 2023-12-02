@@ -2,10 +2,12 @@ package com.axon.classroom;
 
 import java.util.List;
 
+import com.axon.CustomException;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 
 @ApplicationScoped
 public class ClassService {
@@ -32,7 +34,7 @@ public class ClassService {
         Classroom foundClass = this.findById(id);
 
         if (foundClass == null)
-            throw new NotFoundException("Classroom not found!");
+            throw new CustomException(Response.Status.BAD_REQUEST, "Classroom not found!");
 
         classRepository.deleteById(id);
     }

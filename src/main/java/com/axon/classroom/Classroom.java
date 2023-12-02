@@ -22,7 +22,7 @@ public class Classroom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message = "Name must not be blank!")
     private String name;
 
     @Column(name = "created_at")
