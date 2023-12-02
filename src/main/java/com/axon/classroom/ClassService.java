@@ -2,7 +2,7 @@ package com.axon.classroom;
 
 import java.util.List;
 
-import com.axon.CustomException;
+import com.axon.utils.CustomException;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
