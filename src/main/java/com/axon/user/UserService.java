@@ -32,6 +32,7 @@ public class UserService {
     }
 
     public User getByEmail(String email) {
+        validateExistUserWithEmail(email);
         return userRepository.findByEmail(email).get();
     }
 
