@@ -2,6 +2,9 @@ package com.axon.classroom;
 
 import java.util.List;
 
+import com.axon.user.User;
+import com.axon.user.UserService;
+
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -22,6 +25,9 @@ public class ClassResource {
     @Inject
     ClassService classService;
 
+    @Inject
+    UserService userService;
+
     @GET
     public Response getAllClassrooms() {
         List<Classroom> classrooms = classService.getAllClassrooms();
@@ -41,4 +47,19 @@ public class ClassResource {
         return Response.status(Response.Status.OK).entity("Classroom was deleted!").build();
     }
 
+    @POST
+    @Path("{id}/add-user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addUserToClass(@PathParam("id") Integer id, User user) {
+        classService.addUserToClassByEmail(user.getEmail(), id);
+        System.out.println("user: " + user);
+        return Response.status(Response.Status.OK).entity("User has been added to class").build();
+    }
+
+    @GET
+    @Path("{id}/users")
+    public Response getUsersInClass(@PathParam("id") Integer id) {
+        var users = userService.getUsersInClass(id);
+        return Response.status(Response.Status.OK).entity(users).build();
+    }
 }

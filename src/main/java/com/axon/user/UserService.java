@@ -1,5 +1,6 @@
 package com.axon.user;
 
+import com.axon.classroom.ClassService;
 import com.axon.utils.CustomException;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -15,6 +16,9 @@ public class UserService {
     @Inject
     UserRepository userRepository;
 
+    @Inject
+    ClassService classService;
+
     @Transactional
     public Integer register(User user) {
         validateNotExistUserWithEmail(user.getEmail());
@@ -27,11 +31,28 @@ public class UserService {
 
     }
 
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email).get();
+    }
+
     public void validateNotExistUserWithEmail(String email) {
         var foundUser = userRepository.findByEmail(email);
-        System.out.println("foundUser: " + foundUser);
         if (foundUser.isPresent())
             throw new CustomException(BAD_REQUEST, "Email has already existed!");
     }
 
+    public void validateExistUserWithEmail(String email) {
+        var foundUser = userRepository.findByEmail(email);
+        if (foundUser.isEmpty())
+            throw new CustomException(NOT_FOUND, "User not found!");
+    }
+
+    public List<UserDto> getUsersInClass(Integer classId) {
+        classService.validateExistClass(classId);
+        return userRepository.findUsersByClassId(classId).stream().map(this::convertEntityToDto).toList();
+    }
+
+    public UserDto convertEntityToDto(User user) {
+        return new UserDto(user.getFirstName(), user.getLastName(), user.getEmail());
+    }
 }
